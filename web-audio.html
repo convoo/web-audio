@@ -101,18 +101,28 @@ Example:
         // filter.frequency.value = 500;
         // filter.gain.value = 10;
         
-        //--------------- ANYLIZER
         
-        var analyser = context.createAnalyser();        // CREATE THE ANALYSER
-        source.connect(analyser);                       // SQUIRT IN THE AUDIO
-        analyser.connect(context.destination);          // PUSH AUDIO TO HEADPHONES
+        //--------------- GAIN
+        
+        // var gainNode = context.createGain();   // CREATE THE FILTER
+        // source.connect(gainNode);                      // SQUIRT IN THE AUDIO
+        // gainNode.connect(context.destination);         // PUSH AUDIO TO HEADPHONES
+        // // SETTINGS
+        // gainNode.gain.value = 0.1;
+        
+        //--------------- ANYLISER
+        
+        // var analyser = context.createAnalyser();        // CREATE THE ANALYSER
+        // source.connect(analyser);                       // SQUIRT IN THE AUDIO
+        // analyser.connect(context.destination);          // PUSH AUDIO TO HEADPHONES
         
         // // SETTINGS
-        analyser.fftSize = 2048;
-        var bufferLength = analyser.fftSize;
-        var dataArray = new Uint8Array(bufferLength);
-        analyser.getByteTimeDomainData(dataArray);
-        this.data = dataArray;
+        // analyser.fftSize = 2048;
+        // var bufferLength = analyser.fftSize;
+        // var dataArray = new Uint8Array(bufferLength);
+        // analyser.getByteTimeDomainData(dataArray);
+        // this.data = dataArray;
+        // analyser.start();
 
     },
     
