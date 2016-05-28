@@ -26,7 +26,7 @@ Example:
         is: 'web-audio',
         properties: {
             /**
-            * `source` indicates the id where the audio will come from.
+            * `source` indicates the id where the audio will come from, and can be set to an element id or stream depending on the type
             */
             source: {
                 type:String, 
@@ -34,17 +34,26 @@ Example:
                 notify: true,
                 reflectToAttribute: true,
             },
+            /**
+            * `type` indicates the type of the source either element or stream
+            */
             type: {
                 type:String, 
                 value:'element',
                 notify: true,
                 reflectToAttribute: true,
             },
+            /**
+            * `data` represents the data output from the anylizer node
+            */
             data: {
                 type:Object, 
                 notify: true,
                 reflectToAttribute: true,
             },
+            /**
+            * `output` indicates where the output audio should be sent either headphones or stream 
+            */
             output: {
                 type:String, 
                 value:'headphones',
