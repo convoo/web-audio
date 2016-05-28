@@ -44,7 +44,14 @@ Example:
                 type:Object, 
                 notify: true,
                 reflectToAttribute: true,
+            },
+            output: {
+                type:String, 
+                value:'headphones',
+                notify: true,
+                reflectToAttribute: true,
             }
+            
         },
         
     ready: function() {
@@ -65,24 +72,37 @@ Example:
         // This is a good place to perform any work related to your element's
         // visual state or active behavior (measuring sizes, beginning animations,
         // loading resources, etc).
-        //--------------- SETUP ELEMENT SOURCE
-        if(this.type == 'element'){
-        var video = document.getElementById(this.source);
-        var context =  new (window.AudioContext || window.webkitAudioContext)();
-        var source = context.createMediaElementSource(video);
-        }
-        //--------------- SETUP STREAM SOURCE
-        if(this.type == 'stream'){
-        var stream = this.source;
-        var context =  new (window.AudioContext || window.webkitAudioContext)();
-        var source = context.createMediaStreamSource(stream);
-        }
-        //--------------- PANNER
         
+        //--------------- SOURCES
+        if(this.type == 'element'){
+            var video = document.getElementById(this.source);
+            var context =  new (window.AudioContext || window.webkitAudioContext)();
+            var source = context.createMediaElementSource(video);
+        }
+        
+        //https://developer.mozilla.org/en-US/docs/Web/API/MediaStreamAudioSourceNode
+        if(this.type == 'stream'){
+            var stream = this.source;
+            var context =  new (window.AudioContext || window.webkitAudioContext)();
+            var source = context.createMediaStreamSource(stream);
+        }
+        
+        //--------------- OUTPUT
+        // https://developer.mozilla.org/en-US/docs/Web/API/AudioDestinationNode
+        if (this.output == 'headphones'){
+            var output = context.destination;
+        }
+        
+        //https://developer.mozilla.org/en-US/docs/Web/API/MediaStreamAudioDestinationNode
+        if (this.output == 'stream'){
+            var output =  context.createMediaStreamDestination();
+        }
+        
+        //--------------- PANNER
+        //https://developer.mozilla.org/en-US/docs/Web/API/PannerNode
         // var panner = context.createPanner();     // CREATE THE PANNER
         // source.connect(panner);                  // SQUIRT IN THE AUDIO
         // panner.connect(context.destination);     // PUSH AUDIO TO HEADPHONES
-        
         
         // // SETTINGS
         // panner.coneOuterGain = 3;
@@ -91,7 +111,7 @@ Example:
         // context.listener.setPosition(0, 0, 0);   // POSITION USER CENTER
         
         //--------------- BIQUAD FILTER
-        
+        // https://developer.mozilla.org/en-US/docs/Web/API/BiquadFilterNode
         // var filter = context.createBiquadFilter();   // CREATE THE FILTER
         // source.connect(filter);                      // SQUIRT IN THE AUDIO
         // filter.connect(context.destination);         // PUSH AUDIO TO HEADPHONES
@@ -101,17 +121,16 @@ Example:
         // filter.frequency.value = 500;
         // filter.gain.value = 10;
         
-        
         //--------------- GAIN
-        
-        // var gainNode = context.createGain();   // CREATE THE FILTER
-        // source.connect(gainNode);                      // SQUIRT IN THE AUDIO
-        // gainNode.connect(context.destination);         // PUSH AUDIO TO HEADPHONES
-        // // SETTINGS
-        // gainNode.gain.value = 0.1;
+        // https://developer.mozilla.org/en-US/docs/Web/API/GainNode
+        var gainNode = context.createGain();    // CREATE THE FILTER
+        source.connect(gainNode);               // SQUIRT IN THE AUDIO
+        gainNode.connect(output);               // PUSH AUDIO TO OUTPUT
+        // SETTINGS
+        gainNode.gain.value = 0.1;
         
         //--------------- ANYLISER
-        
+        // https://developer.mozilla.org/en-US/docs/Web/API/AnalyserNode
         // var analyser = context.createAnalyser();        // CREATE THE ANALYSER
         // source.connect(analyser);                       // SQUIRT IN THE AUDIO
         // analyser.connect(context.destination);          // PUSH AUDIO TO HEADPHONES
