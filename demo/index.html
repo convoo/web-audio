@@ -1,0 +1,24 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+        <title>web-audio Demo</title>
+        <script src="../../webcomponentsjs/webcomponents-lite.min.js"></script>
+        <link rel="import" href="../web-audio.html">
+    </head>
+    <body unresolved>
+        <dom-module id="demo">
+            <template is="dom-bind" id="demo-template">
+                <video 
+                    src="oceans.webm"
+                    id="video"
+                    autoplay>
+                </video>
+                <web-audio source="video" type="element"></web-audio>
+                <script>
+                </script>
+            </template>
+        </dom-module>
+    </body>
+</html>

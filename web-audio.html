@@ -1,0 +1,131 @@
+<link rel="import" href="../polymer/polymer.html">
+
+<!--
+An element providing a solution to no problem in particular.
+
+Example:
+
+    <web-audio></web-audio>
+
+@demo demo/index.html
+@hero hero.svg
+-->
+
+<dom-module id="web-audio">
+    <template>
+        <style>
+            :host {
+            display: block;
+            box-sizing: border-box;
+        }
+        </style>
+    <content></content>
+    </template>
+    <script>
+    Polymer({
+        is: 'web-audio',
+        properties: {
+            /**
+            * `source` indicates the id where the audio will come from.
+            */
+            source: {
+                type:String, 
+                value:'video',
+                notify: true,
+                reflectToAttribute: true,
+            },
+            type: {
+                type:String, 
+                value:'element',
+                notify: true,
+                reflectToAttribute: true,
+            },
+            data: {
+                type:Object, 
+                notify: true,
+                reflectToAttribute: true,
+            }
+        },
+        
+    ready: function() {
+        // `ready` is called after all elements have been configured, but
+        // propagates bottom-up. This element's children are ready, but parents
+        // are not.
+        //
+        // This is the point where you should make modifications to the DOM (when
+        // necessary), or kick off any processes the element wants to perform.
+
+        
+    },
+    
+    attached: function() {
+        // `attached` fires once the element and its parents have been inserted
+        // into a document.
+        //
+        // This is a good place to perform any work related to your element's
+        // visual state or active behavior (measuring sizes, beginning animations,
+        // loading resources, etc).
+        //--------------- SETUP ELEMENT SOURCE
+        if(this.type == 'element'){
+        var video = document.getElementById(this.source);
+        var context =  new (window.AudioContext || window.webkitAudioContext)();
+        var source = context.createMediaElementSource(video);
+        }
+        //--------------- SETUP STREAM SOURCE
+        if(this.type == 'stream'){
+        var stream = this.source;
+        var context =  new (window.AudioContext || window.webkitAudioContext)();
+        var source = context.createMediaStreamSource(stream);
+        }
+        //--------------- PANNER
+        
+        // var panner = context.createPanner();     // CREATE THE PANNER
+        // source.connect(panner);                  // SQUIRT IN THE AUDIO
+        // panner.connect(context.destination);     // PUSH AUDIO TO HEADPHONES
+        
+        
+        // // SETTINGS
+        // panner.coneOuterGain = 3;
+        // panner.coneOuterAngle = 240;
+        // panner.coneInnerAngle = 40;
+        // context.listener.setPosition(0, 0, 0);   // POSITION USER CENTER
+        
+        //--------------- BIQUAD FILTER
+        
+        // var filter = context.createBiquadFilter();   // CREATE THE FILTER
+        // source.connect(filter);                      // SQUIRT IN THE AUDIO
+        // filter.connect(context.destination);         // PUSH AUDIO TO HEADPHONES
+        
+        // // SETTINGS
+        // filter.type = "lowshelf";
+        // filter.frequency.value = 500;
+        // filter.gain.value = 10;
+        
+        //--------------- ANYLIZER
+        
+        var analyser = context.createAnalyser();        // CREATE THE ANALYSER
+        source.connect(analyser);                       // SQUIRT IN THE AUDIO
+        analyser.connect(context.destination);          // PUSH AUDIO TO HEADPHONES
+        
+        // // SETTINGS
+        analyser.fftSize = 2048;
+        var bufferLength = analyser.fftSize;
+        var dataArray = new Uint8Array(bufferLength);
+        analyser.getByteTimeDomainData(dataArray);
+        this.data = dataArray;
+
+    },
+    
+    detached: function() {
+        // The analog to `attached`, `detached` fires when the element has been
+        // removed from a document.
+        //
+        // Use this to clean up anything you did in `attached`.
+    },
+    
+    
+
+
+    });
+  </script>
+</dom-module>
